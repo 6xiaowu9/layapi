@@ -1,0 +1,19 @@
+{
+	"name": "layowl/layapi",
+    "description": "The Layapi Framework.",
+    "keywords": ["framework", "Layapi"],
+    "license": "MIT",
+    "type": "project",
+    "authors": [
+        {
+            "name": "6xiaowu9",
+            "email": "736518585@qq.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0"
+    },
+    "autoload": {
+    	"files": ["src/Foundation/helpers.php"]
+    }
+}
