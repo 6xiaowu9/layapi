@@ -14,6 +14,9 @@
         "php": ">=7.0"
     },
     "autoload": {
-    	"files": ["src/Foundation/helpers.php"]
+    	"files": ["src/Foundation/helpers.php"],
+        "psr-4": {
+            "LayAPI\\": "src/"
+        }
     }
 }
