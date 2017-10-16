@@ -1,6 +1,6 @@
 <?php 
 
-namespace Neo\Exceptions;
+namespace LayAPI\Exceptions;
 
 /**
 * 异常处理类

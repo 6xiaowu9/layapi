@@ -1,5 +1,5 @@
 <?php
-namespace Neo\Http;
+namespace LayAPI\Http;
 
 /**
 * 响应类

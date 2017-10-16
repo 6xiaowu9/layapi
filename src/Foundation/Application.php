@@ -1,7 +1,7 @@
 <?php 
-namespace Neo\Foundation;
+namespace LayAPI\Foundation;
 
-use Neo\Http\Route;
+use LayAPI\Http\Route;
 /**
 * 启动类
 */

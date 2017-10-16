@@ -1,5 +1,5 @@
 <?php 
-namespace Neo\Controller;
+namespace LayAPI\Controller;
 
 /**
 * 控制器基类

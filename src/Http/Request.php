@@ -1,5 +1,5 @@
 <?php 
-namespace Neo\Http;
+namespace LayAPI\Http;
 
 /**
 * 请求信息
