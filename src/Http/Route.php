@@ -29,38 +29,48 @@ class Route implements RouteInterface
 		$route->callback = $callback;
 		self::$routes[$uri] = $route;
 	}
-    public function group(array $attributes, $routes)
+    public function group( $attributes = null, $routes = null, $parent = null )
 	{
-		$route = new RouteModel();
-		if( $attributes )
-			$route->setRouteProperty( $attributes );
-		$route->isGroup();
-		$routes();
-		$this->routes = $route;
+		Route::loadGroup($parent, $attributes, $routes );
 	}
 	public function put()
 	{
 		dump('ahdfkhsaksldf');
 	}
-	public function post( $attributes = null, $function = null)
+	public function post( $attributes = null, $function = null, $parent = null )
 	{
-		$route = new RouteModel();
-		if( is_array( $attributes ) )
-			$route->setRouteProperty( $attributes );
-		else
-			$route->setPrefix( $attributes );
-		$route->setCallback( $function );
-		dump($this);exit;
-		return $route;
+		Route::loadRouter($parent, 'POST', $attributes, $function );
 	}
 	public function delete()
 	{
 
 	}
-	private function updateGroup( $attributes )
+
+	private function loadRouter( $parent = null, $methods, $attributes, $function )
 	{
-		if( ! empty($this->groupStack) ){
-		}
-		$this->groupStack[] = $attributes;
+		$route = new RouteModel();
+		if( is_array( $attributes ) )
+			$route->setRouteAttributes( $attributes );
+		else
+			$route->setPrefix( $attributes );
+		$route->setMethod( $methods );
+		$route->setCallback( $function );
+		$parent->addGroup( $route );
+	}
+
+	private function loadGroup( $parent = null, $attributes, $routes )
+	{
+		$route = new RouteModel();
+		if( $attributes )
+			if( is_array( $attributes ) )
+				$route->setRouteAttributes( $attributes );
+			else
+				$route->setPrefix( $attributes );
+		$route->isGroup();
+		$routes($route);
+		if( $parent )
+			$parent->addGroup($route);
+		else
+			Route::$routes = $route;
 	}
 }

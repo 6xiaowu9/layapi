@@ -6,6 +6,9 @@ namespace LayAPI\Http;
 */
 class RouteModel
 {
+	// 请求方式
+	private $method;
+
 	// 前缀
 	private $prefix;
 
@@ -19,7 +22,7 @@ class RouteModel
 	private $isGroup = false;
 
 	// 路由组
-	private $group;
+	private $group = [];
 
 	/**
 	 * 设置前缀
@@ -35,7 +38,24 @@ class RouteModel
 	 */
 	public function getPrefix()
 	{
-		return $this->prefix;
+		return trim($this->prefix, '/');
+	}
+
+	/**
+	 * 设置请求类型
+	 * @param string $method 路由请求类型
+	 */
+	public function setMethod( string $method )
+	{
+		$this->method = $method;
+	}
+
+	/**
+	 * 获得请求类型
+	 */
+	public function getMethod()
+	{
+		return $this->method;
 	}
 
 	/**
@@ -52,7 +72,11 @@ class RouteModel
 	 */
 	public function getNamespace()
 	{
-		return $this->namespace;
+		$namespace = trim($this->namespace, '\\');
+		if( $namespace )
+			return '\\'.$namespace;
+		else
+			return '';
 	}
 
 	/**
@@ -76,7 +100,7 @@ class RouteModel
 	 * 设置所有路由属性
 	 * @param array $attributes 包含prefix和namespace
 	 */
-	public function setRouteProperty( array $attributes )
+	public function setRouteAttributes( array $attributes )
 	{
 		$this->setPrefix( $attributes['prefix'] );
 		$this->setNamespace( $attributes['namespace'] );
@@ -89,6 +113,12 @@ class RouteModel
 
 	public function addGroup( RouteModel $route )
 	{
-		$this->group = $route;
+		$this->group[$route->getPrefix()] = $route;
 	}
+
+	public function getGroup()
+	{
+		return $this->group;
+	}
+
 }

@@ -4,7 +4,7 @@ namespace LayAPI\Http;
 
 interface RouteInterface
 {
-	public function group(array $attributes, $routes);
+	public function group();
 	public function get();
 	public function post();
 	public function put();
