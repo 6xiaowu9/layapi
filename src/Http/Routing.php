@@ -4,6 +4,7 @@ namespace LayAPI\Http;
 use Closure;
 use Exception;
 use LayAPI\Http\Route;
+use App\Controller\IndexController;
 
 /**
 * 路由监听
@@ -19,32 +20,19 @@ class Routing
 	public static function start() 
 	{
 		$path = explode( '/', ltrim( $_SERVER['PATH_INFO'], '/' ) );
-		// dump($path);
-		// dump(Route::$routes);
-
-		$closure = Routing::matchingRouter( Route::$routes, $path );
-		// dump($closure);
-		if( $closure )
-			call_user_func( $closure->getCallback() );
-		else
-			throw new Exception("不存在路由");
-
-		exit;
-
-
-		if( isset( Route::$routes[$uri] ) ){
-			$route = Route::$routes[$uri];
-			if ( ($route->callback) instanceof Closure ) {
-				$callback = $route->callback;
-				echo $callback();
-			}else{
-				throw new Exception("回调不是一个闭包");
+		$route = Routing::matchingRouter( Route::$routes, $path );
+		if( $route ){
+			$closure = $route->getCallback();
+			if( $closure instanceof Closure )
+				call_user_func( $closure );
+			else{
+				$callback = explode('@', $closure);
+				$class = ltrim($route->getNamespace().'\\'.trim($callback[0], '\\').'Controller', '\\');
+				$action = $callback[1];
+				call_user_func([$class, $action]);
 			}
-
-		}else{
-			
+		}else
 			throw new Exception("不存在路由");
-		}
 	}
 
 	public function matchingRouter( $routes, $path_arr , $route = null )
