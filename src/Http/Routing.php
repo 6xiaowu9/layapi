@@ -20,7 +20,9 @@ class Routing
 	public static function start() 
 	{
 		$path = explode( '/', ltrim( $_SERVER['PATH_INFO'], '/' ) );
+		// dump($path);exit;
 		$route = Routing::matchingRouter( Route::$routes, $path );
+		// dump($route);exit;
 		if( $route ){
 			$closure = $route->getCallback();
 			if( $closure instanceof Closure )
@@ -40,15 +42,15 @@ class Routing
 		$route = $route ?? new RouteModel();
 		// dump($route);
 		if( is_array( $routes ) ){
-			if( array_key_exists( $path_arr[0], $routes ) )	
+			if( array_key_exists( $path_arr[0], $routes ) || ( $path_arr[0] == '' && array_key_exists( $path_arr[0] = 'index', $routes ) ) )	
 				$routes = $routes[$path_arr[0]];
 			else
 				return false;
 		}else{
-			if( $path_arr[0] != $routes->getPrefix() )
+			if( $path_arr[0] != $routes->getPrefix() && !( $path_arr[0] == ''  && $routes->getPrefix() == 'index') )
 				return false;
 		}
-		$result = array_shift( $path_arr);
+		$result = array_shift( $path_arr );
 		$prefix = $route->getPrefix();
 		if( $prefix ){
 			$route->setPrefix( $prefix.'/'.$result );
