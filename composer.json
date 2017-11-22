@@ -1,10 +1,9 @@
 {
 	"name": "layowl/layapi",
-    "description": "The Layapi Framework.",
-    "keywords": ["framework", "Layapi"],
+    "description": "The LayAPI Framework.",
+    "keywords": ["framework", "LayAPI"],
     "license": "MIT",
     "type": "project",
-    "version":"0.0.1-alpha1",
     "authors": [
         {
             "name": "6xiaowu9",
