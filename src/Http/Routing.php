@@ -12,17 +12,10 @@ use App\Controller\IndexController;
 class Routing
 {
 	
-	function __construct()
-	{
-		# code...
-	}
-
 	public static function start() 
 	{
 		$path = explode( '/', ltrim( $_SERVER['PATH_INFO'], '/' ) );
-		// dump($path);exit;
 		$route = Routing::matchingRouter( Route::$routes, $path );
-		// dump($route);exit;
 		if( $route ){
 			$closure = $route->getCallback();
 			if( $closure instanceof Closure )
@@ -66,7 +59,6 @@ class Routing
 		if( $path_arr ){
 			$route = Routing::matchingRouter( $routes->getGroup(), $path_arr, $route );
 		}
-		// dump($route);exit;
 		return $route;
 	}
 }

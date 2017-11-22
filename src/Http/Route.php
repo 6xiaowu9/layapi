@@ -15,6 +15,7 @@ class Route implements RouteInterface
 	function __construct()
 	{
 		$this->routes = new RouteModel();
+		dump('123');
 	}
 	public function get( $uri = null , $callback = null)
 	{
@@ -67,6 +68,7 @@ class Route implements RouteInterface
 			else
 				$route->setPrefix( $attributes );
 		$route->isGroup();
+		// var_dump($routes($route));exit;
 		$routes($route);
 		if( $parent )
 			$parent->addGroup($route);
