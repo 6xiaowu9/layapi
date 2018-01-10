@@ -7,8 +7,6 @@ use LayAPI\Http\Routing;
 */
 class Application
 {
-	public $neo = "xiaowu";
-	public $route;
 	function __construct()
 	{
 		$this->start();
@@ -17,5 +15,9 @@ class Application
 	protected function start()
 	{
 		Routing::start();
+	}
+
+	public function getClass(){
+		return \LayAPI\Http\RouteModel::class;
 	}
 }

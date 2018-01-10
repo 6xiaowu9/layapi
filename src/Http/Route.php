@@ -15,20 +15,10 @@ class Route implements RouteInterface
 	function __construct()
 	{
 		$this->routes = new RouteModel();
-		dump('123');
 	}
-	public function get( $uri = null , $callback = null)
+	public function get( $attributes = null, $function = null, $parent = null )
 	{
-		if( empty( $uri )){
-  			throw new Exception("未指定URI！");
-		}
-		if( empty( $callback )){
-  			throw new Exception("未指定CALLBACK！");
-		}
-		$route = new stdClass();
-		$route->uri = $uri;
-		$route->callback = $callback;
-		self::$routes[$uri] = $route;
+		Route::loadRouter($parent, 'GET', $attributes, $function );
 	}
     public function group( $attributes = null, $routes = null, $parent = null )
 	{
@@ -36,7 +26,7 @@ class Route implements RouteInterface
 	}
 	public function put()
 	{
-		dump('ahdfkhsaksldf');
+		Route::loadRouter($parent, 'PUT', $attributes, $function );
 	}
 	public function post( $attributes = null, $function = null, $parent = null )
 	{
@@ -44,7 +34,7 @@ class Route implements RouteInterface
 	}
 	public function delete()
 	{
-
+		Route::loadRouter($parent, 'DELETE', $attributes, $function );
 	}
 
 	private function loadRouter( $parent = null, $methods, $attributes, $function )
@@ -67,8 +57,7 @@ class Route implements RouteInterface
 				$route->setRouteAttributes( $attributes );
 			else
 				$route->setPrefix( $attributes );
-		$route->isGroup();
-		// var_dump($routes($route));exit;
+		$route->group();
 		$routes($route);
 		if( $parent )
 			$parent->addGroup($route);

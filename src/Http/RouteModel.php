@@ -108,12 +108,22 @@ class RouteModel
 
 	public function isGroup()
 	{
-		$this->isGroup = true;
+		return $this->isGroup;
+	}
+
+	public function group( $boolean = TRUE )
+	{
+		$this->isGroup = (bool)$boolean;
 	}
 
 	public function addGroup( RouteModel $route )
 	{
 		$this->group[$route->getPrefix()] = $route;
+	}
+
+	public function setGroup( array $route = [] )
+	{
+		$this->group = $route;
 	}
 
 	public function getGroup()

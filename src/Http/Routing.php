@@ -16,49 +16,80 @@ class Routing
 	{
 		$path = explode( '/', ltrim( $_SERVER['PATH_INFO'], '/' ) );
 		$route = Routing::matchingRouter( Route::$routes, $path );
-		if( $route ){
-			$closure = $route->getCallback();
-			if( $closure instanceof Closure )
-				call_user_func( $closure );
-			else{
-				$callback = explode('@', $closure);
-				$class = ltrim($route->getNamespace().'\\'.trim($callback[0], '\\').'Controller', '\\');
-				$action = $callback[1];
-				call_user_func([$class, $action]);
-			}
-		}else
-			throw new Exception("不存在路由");
+		Routing::checkRoute( $route );
+		$closure = $route->getCallback();
+		if( $closure instanceof Closure ){
+			call_user_func( $closure );
+		}else{
+			if( !$closure )
+			Routing::checkClosure( $closure );
+			$callback = explode('@', $closure);
+			$class = ltrim($route->getNamespace().'\\'.trim($callback[0], '\\').'Controller', '\\');
+			$action = $callback[1];
+			if( is_callable([$class, $action], false, $callable_name) )
+				$callable_name();
+			else
+				throw new Exception("the Function: ".$action." of Class: ".$class." does not exist!");
+
+		}
 	}
 
 	public function matchingRouter( $routes, $path_arr , $route = null )
 	{
 		$route = $route ?? new RouteModel();
-		// dump($route);
 		if( is_array( $routes ) ){
-			if( array_key_exists( $path_arr[0], $routes ) || ( $path_arr[0] == '' && array_key_exists( $path_arr[0] = 'index', $routes ) ) )	
+			if( array_key_exists( $path_arr[0], $routes ) || ( $path_arr[0] == '' && array_key_exists( $path_arr[0] = 'index', $routes ) ) )
 				$routes = $routes[$path_arr[0]];
 			else
 				return false;
 		}else{
-			if( $path_arr[0] != $routes->getPrefix() && !( $path_arr[0] == ''  && $routes->getPrefix() == 'index') )
+			$confirm = $path_arr[0] == ''  && $routes->getPrefix() == 'index';
+			if( $path_arr[0] != $routes->getPrefix() && !$confirm )
 				return false;
+			else
+				$confirm ? $route->setPrefix( $routes->getPrefix() ) : false;
 		}
+
 		$result = array_shift( $path_arr );
 		$prefix = $route->getPrefix();
 		if( $prefix ){
 			$route->setPrefix( $prefix.'/'.$result );
 			$route->setNameSpace( $route->getNameSpace().$routes->getNameSpace() );
+			$route->setGroup( $routes->getGroup() );
+			$route->group( $routes->isGroup() );
 			$method = $routes->getMethod();
 			if( $method ){
 				$route->setMethod( $method );
 				$route->setCallback( $routes->getCallback() );
 			}
-		}else{
+		}else
 			$route = $routes;
-		}
-		if( $path_arr ){
+		if( $path_arr )
 			$route = Routing::matchingRouter( $routes->getGroup(), $path_arr, $route );
-		}
 		return $route;
 	}
+
+	private function checkRoute( &$route )
+	{
+		if( !$route )
+			throw new Exception("Callback not found!");
+		Routing::checkMethod( $route );
+		Routing::checkGroup( $route );
+	}
+	private function checkMethod( &$route )
+	{
+		if( !$route->getMethod() )
+			throw new Exception("the Function: ".$route->getPrefix()." of Class: ".$route->getNamespace()." does not exist!");
+	}
+	private function checkGroup( &$route )
+	{
+		if( $route->getGroup() )
+			throw new Exception("the Callback: ".$route->getPrefix()." of Group: ".$route->getNamespace()." does not exist!");
+	}
+	private function checkClosure( &$closure )
+	{
+		if( !$closure )
+			throw new Exception("Closure not found!");
+	}
+
 }
