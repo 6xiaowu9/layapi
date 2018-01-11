@@ -6,9 +6,19 @@ namespace LayAPI\Http;
 */
 class Response
 {
-	
-	function __construct()
+	public function json( $data )
 	{
-		# code...
+		// dump(func_get_args());exit;
+		return Response::format( $data );
 	}
-}
+
+	public function format( $data = '', $code = 200, $message = null )
+	{
+		return array(
+			'code' => $code,
+			'data' => $data,
+			'message' => $message,
+		);
+	}
+
+} 

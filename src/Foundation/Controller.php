@@ -1,10 +1,11 @@
 <?php 
-namespace LayAPI\Controller;
+namespace LayAPI\Foundation;
 
+use LayAPI\Http\Response;
 /**
 * 控制器基类
 */
-class Controller
+class Controller extends Response
 {
 	
 	function __construct()
